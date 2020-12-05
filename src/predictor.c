@@ -2,11 +2,17 @@
 #include <stdlib.h>
 #include <string.h>
 
+struct forBayes{
+    char content[30];
+    int count;
+};
+
 int main(void)
 {
     char negativeword[5000][30];
     char nonnegativeword[3500][30];
     int count = 0;
+    int allcount = 0;
     int index = 0;
 
     FILE *fp1 = fopen("./alltext/RemoveNegative.txt", "r");
@@ -38,16 +44,17 @@ int main(void)
                 }
                 count++;
             }
-
+            allcount++;
             ptr = strtok(NULL, " ");
         }
     }
     printf("count :%d\n",count);
+    printf("allcount :%d\n",allcount);
     fclose(fp1);
     fclose(fp2);
     
     int noncount =0;
-
+    int allnoncount = 0;
     FILE *fp3 = fopen("./alltext/RemoveNonNegative.txt", "r");
     FILE *fp4 = fopen("./alltext/nonnegativewords.txt", "a");
     while (fgets(buffer, sizeof(buffer), fp3) != NULL)
@@ -76,11 +83,12 @@ int main(void)
                 }
                 noncount++;
             }
-
+            allnoncount++;
             ptr = strtok(NULL, " ");
         }
     }
     printf("count :%d\n",noncount);
+    printf("non-allcount :%d\n",allnoncount);
     fclose(fp3);
     fclose(fp4);
     return 0;
