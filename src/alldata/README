@@ -1,0 +1,2 @@
+negative.txt : after stemmer and remove train.negative.csv, made list
+nonnegative.txt : after stemmer and remove train.non-negative.csv, made list
