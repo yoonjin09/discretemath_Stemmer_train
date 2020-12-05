@@ -1,4 +1,6 @@
 all:
 	gcc -o stemmer -I../include stemmer.c ../lib/libstemmer.o 
+	gcc -c predictor.c
+	gcc predictor.o -o predictor
 clean:
-	rm *.txt stemmer
+	rm stemmer predictor predictor.o ./alltext/*.txt
