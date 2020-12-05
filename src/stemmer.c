@@ -136,25 +136,33 @@ int main()
 	}
 	fclose(fpAfterStemNonNe);
 
-	//Stopword removal and Vocabulary reduction
+	/*
+	*	Stopword removal and Vocabulary reduction
+	*/
+	/*
+	*	read all words
+	*/
 
 	FILE *fpAllwords = fopen("allwords", "r");
 	char allword[850][30];
 	int countword = 0;
 	if (fpAllwords == NULL)
 	{
-		printf("Wrong");
+		printf("Can not read allwords");
 	}
 	else
 	{
-		printf("it is ok\n");
+		printf("Read allwords\n");
 	}
 	while (fgets(allword[countword], sizeof(allword[countword]), fp) != NULL)
 	{
 		allword[countword][strlen(allword[countword]) - 1] = '\0';
 		countword++;
 	}
-	printf("allword :%s\n", allword[10]);
+	
+	/*
+	*	remove Stopword on negative.csv
+	*/
 	FILE *fpNegativeRemove = fopen("RemoveNegative.txt", "a");
 	printf("countNegativeline :%d\n", countNegativeline);
 
@@ -162,26 +170,20 @@ int main()
 	char line[200] ;
 	while(fgets(line, sizeof(line), removeNegative) != NULL)
 	{
-		
 		char *ptr = strtok(line, " ");
 		char space[2] = " ";
 		int confirm = 0;
 		char temp[200] = "";
 		while (ptr != NULL)
 		{
-
-			// printf("ptr :%s!\n", ptr);
 			for (int i = 0; i < countword; i++)
 			{
 				if (strcmp(ptr, allword[i]) == 0)
 				{
-					// printf("이거됨\n");
-					// printf("allword :%s\n", allword[i]);
 					confirm = 1;
 					break;
 				}
 			}
-			// printf("confirm :%d\n", confirm);
 			if (confirm == 0)
 			{
 				strcat(temp, ptr);
@@ -189,13 +191,50 @@ int main()
 			}
 			confirm = 0;
 			ptr = strtok(NULL, " ");
-			// printf("\n");
 		}
 		fputs(temp, fpNegativeRemove);
 	}
 	
+	/*
+	*	remove Stopword on non-negative.csv
+	*/
+	FILE *fpNonNegativeRemove = fopen("RemoveNonNegative.txt", "a");
+	printf("countNegativeline :%d\n", countNonNegativeline);
+
+	FILE * removeNonNegative = fopen("afterStemmerNonNegative.txt", "r");
+	char nonline[200] ;
+	while(fgets(nonline, sizeof(nonline), removeNonNegative) != NULL)
+	{
+		
+		char *ptr = strtok(nonline, " ");
+		char space[2] = " ";
+		int confirm = 0;
+		char temp[200] = "";
+		while (ptr != NULL)
+		{
+			for (int i = 0; i < countword; i++)
+			{
+				if (strcmp(ptr, allword[i]) == 0)
+				{
+					confirm = 1;
+					break;
+				}
+			}
+			if (confirm == 0)
+			{
+				strcat(temp, ptr);
+				strcat(temp, space);
+			}
+			confirm = 0;
+			ptr = strtok(NULL, " ");
+		}
+		fputs(temp, fpNonNegativeRemove);
+	}
+
 	fclose(removeNegative);
+	fclose(removeNonNegative);
 	fclose(fpNegativeRemove);
+	fclose(fpNonNegativeRemove);
 	fclose(fpAllwords);
 	return 0;
 }
