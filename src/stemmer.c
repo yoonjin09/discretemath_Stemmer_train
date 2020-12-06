@@ -285,6 +285,52 @@ int main()
 
 	fclose(fpNonNegativeRemove);
 
+	struct sb_stemmer *stemmertestnegative;
+	FILE * testnegative = fopen("../data/test.negative.csv","r");
+	FILE * writetestNegative = fopen("./alltext/testnagative.txt","a");
+
+	char buffertest[200];
+	stemmertestnegative = sb_stemmer_new("english", 0x0);
+	while(fgets(buffertest, sizeof(buffertest) ,testnegative) != NULL){
+		char *ptr = strtok(buffertest, " \"");
+		while (ptr != NULL)
+		{
+			const char *s;
+			s = sb_stemmer_stem(stemmertestnegative, ptr, strlen(ptr));
+			fputs(ptr, writetestNegative);
+			fputs(" ", writetestNegative);
+			// endline=0;
+			ptr = strtok(NULL, " \"");
+		}
+	}
+		
+	sb_stemmer_delete(stemmertestnegative);
+	fclose(testnegative);
+	fclose(writetestNegative);
+
+	struct sb_stemmer *stemmertestnonnegative;
+	FILE * testnonnegative = fopen("../data/test.non-negative.csv","r");
+	FILE * writetestNonNegative = fopen("./alltext/testnonnagative.txt","a");
+
+	char buffertestnon[200];
+	stemmertestnonnegative = sb_stemmer_new("english", 0x0);
+	while(fgets(buffertestnon, sizeof(buffertestnon) ,testnonnegative) != NULL){
+		char *ptr = strtok(buffertestnon, " “”.+'_-?\"!,;$()*");
+		while (ptr != NULL)
+		{
+			const char *s;
+			s = sb_stemmer_stem(stemmertestnonnegative, ptr, strlen(ptr));
+			fputs(ptr, writetestNonNegative);
+			fputs(" ", writetestNonNegative);
+			// endline=0;
+			ptr = strtok(NULL, " “”.+'_-?!,;$\"()*");
+		}
+	}
+		
+	sb_stemmer_delete(stemmertestnonnegative);
+	fclose(testnonnegative);
+	fclose(writetestNonNegative);
+
 	printf("FINISH\n");
 	return 0;
 }
