@@ -3,4 +3,4 @@ all:
 	gcc -c predictor.c
 	gcc predictor.o -o predictor
 clean:
-	rm stemmer predictor predictor.o ./alltext/*.txt
+	rm stemmer predictor predictor.o ./alltext/*.txt ./result/*.txt
