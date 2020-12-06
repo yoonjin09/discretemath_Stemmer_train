@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 struct forBayes
 {
-    int index;
+    float po;
     int count;
 };
 
@@ -110,18 +111,136 @@ int main(void)
     printf("non-allcount :%d\n", allnoncount);
     fclose(fp3);
     fclose(fp4);
-    int total = 0;
-    int nontotal = 0;
     for (int i = 0; i < count; i++)
     {
-        total = total + negativeword1[i].count;
+        negativeword1[i].po = log((float)(negativeword1[i].count + 1) / (allnoncount +allcount));
     }
     for (int i = 0; i < noncount; i++)
     {
-        nontotal = nontotal + nonnegativeword1[i].count;
+        nonnegativeword1[i].po = log((float)(nonnegativeword1[i].count + 1) /(allcount+ allnoncount));
     }
-    printf("TOTAL :%d\n", total);
-    printf("TOTAL :%d\n", nontotal);
+    printf("%d\n", negativeword1[1].count);
+    printf("%f\n", negativeword1[1].po);
+    printf("%d\n", nonnegativeword1[1].count);
+    printf("%f\n", nonnegativeword1[1].po);
+
+    FILE *testnegative = fopen("../data/test.negative.csv", "r");
+    FILE *confirmnegative = fopen("./result/confirmnegative.txt", "a");
+    char testbuffer[300] ="";
+    if (testnegative == NULL)
+	{
+		printf("Can not read test.negative.csv\n");
+	}
+	else
+	{
+		printf("Read test.negative.csv\n");
+	}
+    while (fgets(testbuffer, sizeof(testbuffer), testnegative) != NULL)
+    {
+        float negativepro = 0;
+        float nonnegativepro = 0;
+        char temp[200] = "";
+        strcpy(temp, testbuffer);
+        char *ptr = strtok(testbuffer, " ");
+        while (ptr != NULL)
+        {
+            int confirm = 0;
+            for (index = 0; index < count; index++)
+            {
+                char * tempptr = negativeword[index];
+                // if (strlen(ptr) > strlen(negativeword[index]))
+                // {
+                    if (strstr(ptr, negativeword[index]) != NULL)
+                    // if(strcmp(ptr,negativeword[index]) ==0)
+                    {
+                        negativepro = negativepro + negativeword1[index].po;
+                        break;
+                    }
+                // }
+            }
+            for (index = 0; index < noncount; index++)
+            {
+
+                // if (strlen(ptr) > strlen(nonnegativeword[index]))
+                // {
+                    if (strstr(ptr, nonnegativeword[index]) != NULL)
+                    // if(strcmp(ptr, nonnegativeword[index]) == 0)
+                    {
+                        nonnegativepro = nonnegativepro + nonnegativeword1[index].po;
+                        break;
+                    }
+                // }
+            }
+            ptr = strtok(NULL, " ");
+        }
+        if (negativepro > nonnegativepro){ 
+            fputs(temp, confirmnegative);
+            // printf("pro :%f %f\n\n",negativepro, nonnegativepro);
+        }
+        // printf("temp :%s\n",temp);
+    }
+
+    fclose(testnegative);
+    fclose(confirmnegative);
+
+
+    FILE *testnonnegative = fopen("../data/test.non-negative.csv", "r");
+    FILE *confirmnonnegative = fopen("./result/confirmnonnegative.txt", "a");
+    char nontestbuffer[300] ="";
+    if (testnonnegative == NULL)
+	{
+		printf("Can not read test.non-negative.csv\n");
+	}
+	else
+	{
+		printf("Read test.non-negative.csv\n");
+	}
+    while (fgets(nontestbuffer, sizeof(nontestbuffer), testnonnegative) != NULL)
+    {
+        float negativepro = 0;
+        float nonnegativepro = 0;
+        char temp[200] = "";
+        strcpy(temp, nontestbuffer);
+        char *ptr = strtok(nontestbuffer, " ");
+        while (ptr != NULL)
+        {
+            int confirm = 0;
+            for (index = 0; index < count; index++)
+            {
+                // if (strlen(ptr) > strlen(negativeword[index]))
+                // {
+                    if (strstr(ptr, negativeword[index]) != NULL)
+                    // if(strcmp(ptr,negativeword[index]) ==0)
+                    {
+                        negativepro = negativepro + negativeword1[index].po;
+                        break;
+                    }
+                // }
+            }
+            for (index = 0; index < noncount; index++)
+            {
+
+                // if (strlen(ptr) > strlen(nonnegativeword[index]))
+                // {
+                    if (strstr(ptr, nonnegativeword[index]) != NULL)
+                    // if(strcmp(ptr, nonnegativeword[index]) == 0)
+                    {
+                        nonnegativepro = nonnegativepro + nonnegativeword1[index].po;
+                        break;
+                    }
+                // }
+            }
+            ptr = strtok(NULL, " ");
+        }
+        if (negativepro < nonnegativepro){ 
+            fputs(temp, confirmnonnegative);
+            // printf("pro :%f %f\n\n",negativepro, nonnegativepro);
+        }
+        // printf("temp :%s\n",temp);
+    }
+
+    fclose(testnonnegative);
+    fclose(confirmnonnegative);
     return 0;
 }
 // 구조체를 사용해서 content와 있는 개수를 같이 저장하려고 하였지만 strcpy에서 자꾸 문제가 생기는 바람에 내용따로, 개수 따로 저장하게 되었음.
