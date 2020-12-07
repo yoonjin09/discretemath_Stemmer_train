@@ -1,0 +1,16 @@
+src 폴더에서 make를 하면 됩니다.
+
+./stemmer를 실행하면 trainer에 해당하는 작업이 이루어집니다
+-alltext 폴더에 총 4개의 txt 파일이 생성됩니다.
+afterStemmerNegative.txt : train.negative.csv를 tokenization을 한 후 stemmer 프로그램을 이용해서 나온 문장들입니다.
+afterStemmerNonNegative.txt : train.non-negative.csv를 tokenization을 한 후 stemmer 프로그램을 이용해서 나온 문장들입니다.
+RemoveNegative.txt : stopword와 noun 등을 삭제하고 남은 문장들입니다.
+RemoveNonNegative.txt : stopword와 noun 등을 삭제하고 남은 문장들입니다.
+
+후에 ./predictor를 실행하면 predict에 해당하는 작업이 이루어집니다
+-alltext 폴더에 2개의 txt 파일이 추가로 생성됩니다.
+negativewords.txt : 반복되는 단어들은 제외하고 RemoveNegative.txt에서 가져와서 정렬한 단어들 리스트입니다.
+nonnegativewords.txt : 반복되는 단어들은 제외하고 RemoveNonNegative.txt에서 가져와서 정렬한 단어들 리스트입니다.
+-result 폴더에 2개의 txt 파일이 생성됩니다.
+confirmnegative.txt : test.negative.csv에서 negative 문장이라고 판단되는 문장들을 입력한 것입니다.
+confirmnonnegative.txt : test.non-negative.csv에서 non-negative 문장이라고 판단되는 문장을 입력한 것입니다.
