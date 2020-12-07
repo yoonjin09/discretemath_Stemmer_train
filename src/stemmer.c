@@ -7,7 +7,6 @@
 int main()
 {
 	FILE *fp = fopen("../data/train.negative.csv", "r");
-	printf("hellow world\n");
 	char negativecsv[9090][200];
 	char tokenNegativeCsv[9090][200];
 	int countNegativeline = 0;
@@ -51,19 +50,11 @@ int main()
 		char *ptr = strtok(tokenNegativeCsv[index], " ");
 		while (ptr != NULL)
 		{
-			// if (strcmp(&ptr[strlen(ptr) - 1], "\n") == 0){
-			// 	ptr[strlen(ptr) - 1] = '\0';
-			// 	endline = 1;
-			// }
 			const char *s;
 			s = sb_stemmer_stem(stemmer, ptr, strlen(ptr));
 			
 			strcat(afterStemNegative[index], s);
 			strcat(afterStemNegative[index], space);
-			if(endline == 1){
-				strcat(ptr,"\n");
-			}
-			// endline=0;
 			ptr = strtok(NULL, " ");
 		}
 	}
@@ -130,10 +121,6 @@ int main()
 			s = sb_stemmer_stem(stemmer2, ptr, strlen(ptr));
 			strcat(nonnegativecsv[index], s);
 			strcat(nonnegativecsv[index], space);
-			if(endline == 1){
-				strcat(ptr,"\n");
-			}
-			// endline =0;
 			ptr = strtok(NULL, " ");
 		}
 	}
@@ -200,10 +187,9 @@ int main()
 			}
 			if (strchr(ptr, '^') || strchr(ptr, '\"') || strchr(ptr, '@') || strchr(ptr, ':') || strchr(ptr, '/') || strchr(ptr, '#') || strchr(ptr, '\'') || strchr(ptr, '&') || strchr(ptr, '1') || strchr(ptr, '2') || strchr(ptr, '3') || strchr(ptr, '4') || strchr(ptr, '5') || strchr(ptr, '6') || strchr(ptr, '7') || strchr(ptr, '8') || strchr(ptr, '9') || strchr(ptr, '0') != NULL)
 			{
-				// printf("ptr :%s\n",ptr);
 				confirm = 1;
 			}
-			if (isupper(ptr[0]))
+			if (isupper(ptr[0]) ==1 && isupper(ptr[1]) != 1)
 			{
 				confirm = 1;
 			}
@@ -255,12 +241,11 @@ int main()
 			}
 			if (strchr(ptr, '^') || strchr(ptr, '\"') || strchr(ptr, '@') || strchr(ptr, ':') || strchr(ptr, '/') || strchr(ptr, '#') || strchr(ptr, '\'') || strchr(ptr, '&') || strchr(ptr, '1') || strchr(ptr, '2') || strchr(ptr, '3') || strchr(ptr, '4') || strchr(ptr, '5') || strchr(ptr, '6') || strchr(ptr, '7') || strchr(ptr, '8') || strchr(ptr, '9') || strchr(ptr, '0')  != NULL)
 			{
-				// printf("ptr :%s\n",ptr);
 				confirm = 1;
 				if (strcmp(&ptr[strlen(ptr) - 1], "\n") == 0)
 					strcat(temp, "\n");
 			}
-			if (isupper(ptr[0]))
+			if (isupper(ptr[0]) ==1 && isupper(ptr[1]) != 1)
 			{
 				confirm = 1;
 			}
@@ -284,52 +269,6 @@ int main()
 	fclose(removeNonNegative);
 
 	fclose(fpNonNegativeRemove);
-
-	struct sb_stemmer *stemmertestnegative;
-	FILE * testnegative = fopen("../data/test.negative.csv","r");
-	FILE * writetestNegative = fopen("./alltext/testnagative.txt","a");
-
-	char buffertest[200];
-	stemmertestnegative = sb_stemmer_new("english", 0x0);
-	while(fgets(buffertest, sizeof(buffertest) ,testnegative) != NULL){
-		char *ptr = strtok(buffertest, " \"");
-		while (ptr != NULL)
-		{
-			const char *s;
-			s = sb_stemmer_stem(stemmertestnegative, ptr, strlen(ptr));
-			fputs(ptr, writetestNegative);
-			fputs(" ", writetestNegative);
-			// endline=0;
-			ptr = strtok(NULL, " \"");
-		}
-	}
-		
-	sb_stemmer_delete(stemmertestnegative);
-	fclose(testnegative);
-	fclose(writetestNegative);
-
-	struct sb_stemmer *stemmertestnonnegative;
-	FILE * testnonnegative = fopen("../data/test.non-negative.csv","r");
-	FILE * writetestNonNegative = fopen("./alltext/testnonnagative.txt","a");
-
-	char buffertestnon[200];
-	stemmertestnonnegative = sb_stemmer_new("english", 0x0);
-	while(fgets(buffertestnon, sizeof(buffertestnon) ,testnonnegative) != NULL){
-		char *ptr = strtok(buffertestnon, " “”.+'_-?\"!,;$()*");
-		while (ptr != NULL)
-		{
-			const char *s;
-			s = sb_stemmer_stem(stemmertestnonnegative, ptr, strlen(ptr));
-			fputs(ptr, writetestNonNegative);
-			fputs(" ", writetestNonNegative);
-			// endline=0;
-			ptr = strtok(NULL, " “”.+'_-?!,;$\"()*");
-		}
-	}
-		
-	sb_stemmer_delete(stemmertestnonnegative);
-	fclose(testnonnegative);
-	fclose(writetestNonNegative);
 
 	printf("FINISH\n");
 	return 0;
